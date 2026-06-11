@@ -141,14 +141,17 @@ function QuoteEditor({ open, onOpenChange, id, onSaved }: { open: boolean; onOpe
     if (!form.client_id) return toast.error("Selecione cliente");
     if (!items.length) return toast.error("Adicione itens");
     const payload = { client_id: form.client_id, description: form.description, discount: Number(form.discount) || 0, total, validity_date: form.validity_date || null, notes: form.notes, status: form.status };
-    let qid = id;
-    const res = qid
-      ? await supabase.from("quotes").update(payload).eq("id", qid)
-      : await supabase.from("quotes").insert(payload).select("id").single();
-    if (res.error) return toast.error(res.error.message);
-    if (!qid) qid = (res as any).data.id;
+    let qid: string | null = id;
+    if (qid) {
+      const res = await supabase.from("quotes").update(payload).eq("id", qid);
+      if (res.error) return toast.error(res.error.message);
+    } else {
+      const res = await supabase.from("quotes").insert(payload).select("id").single();
+      if (res.error || !res.data) return toast.error(res.error?.message || "Erro");
+      qid = res.data.id;
+    }
     await supabase.from("quote_items").delete().eq("quote_id", qid);
-    const { error } = await supabase.from("quote_items").insert(items.map((i) => ({ quote_id: qid, description: i.description, quantity: i.quantity, unit_price: i.unit_price, subtotal: i.subtotal, service_id: i.service_id ?? null })));
+    const { error } = await supabase.from("quote_items").insert(items.map((i) => ({ quote_id: qid!, description: i.description, quantity: i.quantity, unit_price: i.unit_price, subtotal: i.subtotal, service_id: i.service_id ?? null })));
     if (error) return toast.error(error.message);
     toast.success("Salvo"); onOpenChange(false); onSaved();
   }
