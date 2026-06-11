@@ -11,19 +11,20 @@ export const Route = createFileRoute("/_authenticated/production")({ component: 
 const COLUMNS = [
   "aguardando_arte", "arte_em_criacao", "aguardando_aprovacao",
   "aprovado", "em_producao", "pronto_para_retirada", "entregue",
-];
+] as const;
+type ProdStatus = typeof COLUMNS[number];
 
 function Kanban() {
   const qc = useQueryClient();
   const { data } = useQuery({
     queryKey: ["kanban"],
     queryFn: async () => {
-      const { data } = await supabase.from("orders").select("*, clients(name)").in("production_status", COLUMNS).order("deadline", { ascending: true });
+      const { data } = await supabase.from("orders").select("*, clients(name)").in("production_status", COLUMNS as readonly string[] as any).order("deadline", { ascending: true });
       return (data ?? []) as any[];
     },
   });
 
-  async function move(id: string, status: string) {
+  async function move(id: string, status: ProdStatus) {
     const { error } = await supabase.from("orders").update({ production_status: status }).eq("id", id);
     if (error) return toast.error(error.message);
     qc.invalidateQueries({ queryKey: ["kanban"] });
