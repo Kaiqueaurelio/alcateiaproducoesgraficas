@@ -4,7 +4,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
-  head: () => ({ meta: [{ title: "Alcateia Gestão" }] }),
+  head: () => ({ meta: [{ title: "Alcateia's Gestão" }] }),
   component: Index,
 });
 

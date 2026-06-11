@@ -7,6 +7,10 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  // Generate Vercel Build Output API routes and the SSR function.
+  // Without an explicit preset outside Lovable, Vite only emits dist/ and
+  // Vercel publishes an empty deployment that returns NOT_FOUND.
+  nitro: { preset: "vercel" },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this

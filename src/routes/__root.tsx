@@ -79,24 +79,30 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Alcateia Gestão" },
+      { title: "Alcateia's Gestão" },
       { name: "description", content: "Sistema de gestão para a Alcateia's Produções Gráficas" },
       { name: "author", content: "Alcateia" },
-      { property: "og:title", content: "Alcateia Gestão" },
-      { property: "og:description", content: "Sistema de gestão para a Alcateia's Produções Gráficas" },
+      { property: "og:title", content: "Alcateia's Gestão" },
+      {
+        property: "og:description",
+        content: "Sistema de gestão para a Alcateia's Produções Gráficas",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Alcateia Gestão" },
-      { name: "twitter:description", content: "Sistema de gestão para a Alcateia's Produções Gráficas" },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a7f3e14e-a1f5-446f-a9d1-017c08c42248/id-preview-83633944--ebe87853-f70e-45ca-8c52-709e6f8f5774.lovable.app-1781184807348.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a7f3e14e-a1f5-446f-a9d1-017c08c42248/id-preview-83633944--ebe87853-f70e-45ca-8c52-709e6f8f5774.lovable.app-1781184807348.png" },
+      { name: "twitter:title", content: "Alcateia's Gestão" },
+      {
+        name: "twitter:description",
+        content: "Sistema de gestão para a Alcateia's Produções Gráficas",
+      },
+      { property: "og:image", content: "/brand/alcateia-logo.png" },
+      { name: "twitter:image", content: "/brand/alcateia-logo.png" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
+      { rel: "icon", type: "image/png", href: "/brand/alcateia-symbol.png" },
     ],
   }),
   shellComponent: RootShell,
@@ -107,7 +113,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <HeadContent />
       </head>

@@ -1,21 +1,46 @@
 import type { ReactNode } from "react";
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import {
-  LayoutDashboard, Users, FileText, ClipboardList, Kanban, Wallet,
-  Receipt, Package, Settings, LogOut, Menu,
+  LayoutDashboard,
+  Users,
+  FileText,
+  ClipboardList,
+  Kanban,
+  Wallet,
+  Receipt,
+  Package,
+  Settings,
+  LogOut,
+  Menu,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useAuth, ROLE_LABEL, type AppRole } from "@/lib/auth";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-const NAV: { to: string; label: string; icon: any; roles?: AppRole[] }[] = [
+const NAV: { to: string; label: string; icon: LucideIcon; roles?: AppRole[] }[] = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/clients", label: "Clientes", icon: Users, roles: ["administrador", "atendente"] },
   { to: "/quotes", label: "Orçamentos", icon: FileText, roles: ["administrador", "atendente"] },
-  { to: "/orders", label: "Ordens de Serviço", icon: ClipboardList, roles: ["administrador", "atendente", "producao", "financeiro"] },
-  { to: "/production", label: "Produção", icon: Kanban, roles: ["administrador", "atendente", "producao"] },
+  {
+    to: "/orders",
+    label: "Ordens de Serviço",
+    icon: ClipboardList,
+    roles: ["administrador", "atendente", "producao", "financeiro"],
+  },
+  {
+    to: "/production",
+    label: "Produção",
+    icon: Kanban,
+    roles: ["administrador", "atendente", "producao"],
+  },
   { to: "/cash", label: "Caixa", icon: Wallet, roles: ["administrador", "financeiro"] },
-  { to: "/receivables", label: "Contas a Receber", icon: Receipt, roles: ["administrador", "financeiro", "atendente"] },
+  {
+    to: "/receivables",
+    label: "Contas a Receber",
+    icon: Receipt,
+    roles: ["administrador", "financeiro", "atendente"],
+  },
   { to: "/services", label: "Serviços", icon: Package, roles: ["administrador", "atendente"] },
   { to: "/settings", label: "Configurações", icon: Settings, roles: ["administrador"] },
 ];
@@ -36,11 +61,15 @@ export function AppShell({ children }: { children: ReactNode }) {
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="px-5 py-5 border-b border-sidebar-border">
+        <div className="px-4 py-4 border-b border-sidebar-border">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gold flex items-center justify-center font-bold text-gold-foreground">A</div>
+            <img
+              src="/brand/alcateia-symbol.png"
+              alt="Símbolo da Alcateia's"
+              className="w-12 h-12 rounded-full bg-white object-contain shadow-sm"
+            />
             <div>
-              <div className="font-bold text-sidebar-foreground">Alcateia</div>
+              <div className="font-bold text-sidebar-foreground">Alcateia's</div>
               <div className="text-[10px] uppercase tracking-wider text-gold">Gestão</div>
             </div>
           </div>
@@ -73,18 +102,25 @@ export function AppShell({ children }: { children: ReactNode }) {
             <div>{roles.map((r) => ROLE_LABEL[r]).join(", ") || "Sem papel"}</div>
           </div>
           <button
-            onClick={async () => { await signOut(); nav({ to: "/auth" }); }}
+            onClick={async () => {
+              await signOut();
+              nav({ to: "/auth" });
+            }}
             className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg text-sidebar-foreground/80 hover:bg-sidebar-accent"
           >
             <LogOut className="w-4 h-4" /> Sair
           </button>
         </div>
       </aside>
-      {open && <div onClick={() => setOpen(false)} className="fixed inset-0 bg-black/40 z-30 md:hidden" />}
+      {open && (
+        <div onClick={() => setOpen(false)} className="fixed inset-0 bg-black/40 z-30 md:hidden" />
+      )}
 
       <div className="flex-1 md:ml-64 flex flex-col min-w-0">
         <header className="h-14 border-b border-border bg-card flex items-center px-4 sticky top-0 z-20">
-          <button className="md:hidden mr-2" onClick={() => setOpen(true)} aria-label="Menu"><Menu /></button>
+          <button className="md:hidden mr-2" onClick={() => setOpen(true)} aria-label="Menu">
+            <Menu />
+          </button>
           <div className="font-semibold text-primary">{currentTitle(path)}</div>
         </header>
         <main className="flex-1 p-4 md:p-6">{children}</main>
@@ -95,5 +131,5 @@ export function AppShell({ children }: { children: ReactNode }) {
 
 function currentTitle(p: string) {
   const m = NAV.find((n) => p === n.to || (n.to !== "/dashboard" && p.startsWith(n.to)));
-  return m?.label ?? "Alcateia Gestão";
+  return m?.label ?? "Alcateia's Gestão";
 }
