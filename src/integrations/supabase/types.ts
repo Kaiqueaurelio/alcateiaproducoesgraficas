@@ -275,6 +275,8 @@ export type Database = {
       }
       orders: {
         Row: {
+          assignee_id: string | null
+          assignee_name: string | null
           attendant_id: string | null
           client_id: string
           client_notes: string | null
@@ -299,6 +301,8 @@ export type Database = {
           urgent: boolean
         }
         Insert: {
+          assignee_id?: string | null
+          assignee_name?: string | null
           attendant_id?: string | null
           client_id: string
           client_notes?: string | null
@@ -323,6 +327,8 @@ export type Database = {
           urgent?: boolean
         }
         Update: {
+          assignee_id?: string | null
+          assignee_name?: string | null
           attendant_id?: string | null
           client_id?: string
           client_notes?: string | null
@@ -359,6 +365,44 @@ export type Database = {
             columns: ["quote_id"]
             isOneToOne: false
             referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      production_updates: {
+        Row: {
+          author_id: string | null
+          author_name: string | null
+          created_at: string
+          id: string
+          note: string
+          order_id: string
+          status: Database["public"]["Enums"]["production_status"] | null
+        }
+        Insert: {
+          author_id?: string | null
+          author_name?: string | null
+          created_at?: string
+          id?: string
+          note: string
+          order_id: string
+          status?: Database["public"]["Enums"]["production_status"] | null
+        }
+        Update: {
+          author_id?: string | null
+          author_name?: string | null
+          created_at?: string
+          id?: string
+          note?: string
+          order_id?: string
+          status?: Database["public"]["Enums"]["production_status"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "production_updates_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
             referencedColumns: ["id"]
           },
         ]
