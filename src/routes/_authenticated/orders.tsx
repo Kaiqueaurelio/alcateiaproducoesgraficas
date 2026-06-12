@@ -22,11 +22,21 @@ function OrdersPage() {
   const { data } = useQuery({
     queryKey: ["orders", search],
     queryFn: async () => {
-      let q = supabase.from("orders").select("*, clients(name)").order("created_at", { ascending: false }).limit(200);
+      let q = supabase
+        .from("orders")
+        .select("*, clients(name), assignee:profiles!orders_assigned_to_fkey(full_name,email)")
+        .order("created_at", { ascending: false })
+        .limit(200);
       const { data, error } = await q;
       if (error) throw error;
       const rows = (data ?? []) as any[];
-      return search ? rows.filter((r) => (r.clients?.name ?? "").toLowerCase().includes(search.toLowerCase()) || String(r.number).includes(search)) : rows;
+      return search
+        ? rows.filter(
+            (r) =>
+              (r.clients?.name ?? "").toLowerCase().includes(search.toLowerCase()) ||
+              String(r.number).includes(search),
+          )
+        : rows;
     },
   });
 
@@ -38,16 +48,36 @@ function OrdersPage() {
     qc.invalidateQueries({ queryKey: ["orders"] });
   }
 
-  function isOverdue(o: any) { return o.deadline && new Date(o.deadline) < new Date() && o.production_status !== "entregue" && o.production_status !== "cancelado"; }
+  function isOverdue(o: any) {
+    return (
+      o.deadline &&
+      new Date(o.deadline) < new Date() &&
+      o.production_status !== "entregue" &&
+      o.production_status !== "cancelado"
+    );
+  }
 
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row gap-2 justify-between">
         <div className="relative flex-1 max-w-sm">
           <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-          <Input placeholder="Buscar por cliente ou nº" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+          <Input
+            placeholder="Buscar por cliente ou nº"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9"
+          />
         </div>
-        <Button onClick={() => { setEditId(null); setOpen(true); }}><Plus className="w-4 h-4 mr-1" />Nova OS</Button>
+        <Button
+          onClick={() => {
+            setEditId(null);
+            setOpen(true);
+          }}
+        >
+          <Plus className="w-4 h-4 mr-1" />
+          Nova OS
+        </Button>
       </div>
       <Card>
         <div className="overflow-x-auto">
@@ -58,6 +88,7 @@ function OrdersPage() {
                 <th className="text-left p-3">Cliente</th>
                 <th className="text-left p-3 hidden md:table-cell">Prazo</th>
                 <th className="text-left p-3 hidden md:table-cell">Status</th>
+                <th className="text-left p-3 hidden xl:table-cell">Responsável / atividade</th>
                 <th className="text-left p-3 hidden lg:table-cell">Pagamento</th>
                 <th className="text-right p-3">Total</th>
                 <th></th>
@@ -68,27 +99,72 @@ function OrdersPage() {
                 <tr key={o.id} className="border-t hover:bg-muted/30">
                   <td className="p-3 font-mono">#{o.number}</td>
                   <td className="p-3 font-medium">
-                    <div className="flex items-center gap-2">{o.clients?.name}
-                      {o.urgent && <Badge className="bg-destructive text-destructive-foreground">Urgente</Badge>}
+                    <div className="flex items-center gap-2">
+                      {o.clients?.name}
+                      {o.urgent && (
+                        <Badge className="bg-destructive text-destructive-foreground">
+                          Urgente
+                        </Badge>
+                      )}
                       {isOverdue(o) && <AlertTriangle className="w-3 h-3 text-destructive" />}
                     </div>
                   </td>
                   <td className="p-3 hidden md:table-cell">{fmtDate(o.deadline)}</td>
-                  <td className="p-3 hidden md:table-cell"><Badge variant="outline">{PRODUCTION_STATUS_LABEL[o.production_status]}</Badge></td>
-                  <td className="p-3 hidden lg:table-cell"><Badge variant="outline">{PAYMENT_STATUS_LABEL[o.payment_status]}</Badge></td>
+                  <td className="p-3 hidden md:table-cell">
+                    <Badge variant="outline">{PRODUCTION_STATUS_LABEL[o.production_status]}</Badge>
+                  </td>
+                  <td className="p-3 hidden xl:table-cell max-w-[260px]">
+                    <div className="font-medium text-xs">
+                      {o.assignee?.full_name || o.assignee?.email || "Sem responsável"}
+                    </div>
+                    <div className="text-xs text-muted-foreground truncate mt-1">
+                      {o.current_activity || "Atividade não informada"}
+                    </div>
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <div className="h-1.5 flex-1 bg-muted rounded-full overflow-hidden">
+                        <div className="h-full bg-gold" style={{ width: `${o.progress || 0}%` }} />
+                      </div>
+                      <span className="text-[10px]">{o.progress || 0}%</span>
+                    </div>
+                  </td>
+                  <td className="p-3 hidden lg:table-cell">
+                    <Badge variant="outline">{PAYMENT_STATUS_LABEL[o.payment_status]}</Badge>
+                  </td>
                   <td className="p-3 text-right font-mono">{brl(o.total)}</td>
                   <td className="p-3 text-right">
-                    <Button size="icon" variant="ghost" onClick={() => { setEditId(o.id); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
-                    <Button size="icon" variant="ghost" onClick={() => remove(o.id, o.number)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => {
+                        setEditId(o.id);
+                        setOpen(true);
+                      }}
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </Button>
+                    <Button size="icon" variant="ghost" onClick={() => remove(o.id, o.number)}>
+                      <Trash2 className="w-4 h-4 text-destructive" />
+                    </Button>
                   </td>
                 </tr>
               ))}
-              {!data?.length && (<tr><td colSpan={7} className="p-8 text-center text-muted-foreground">Nenhuma OS cadastrada</td></tr>)}
+              {!data?.length && (
+                <tr>
+                  <td colSpan={8} className="p-8 text-center text-muted-foreground">
+                    Nenhuma OS cadastrada
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
       </Card>
-      <OrderEditor open={open} onOpenChange={setOpen} orderId={editId} onSaved={() => qc.invalidateQueries({ queryKey: ["orders"] })} />
+      <OrderEditor
+        open={open}
+        onOpenChange={setOpen}
+        orderId={editId}
+        onSaved={() => qc.invalidateQueries({ queryKey: ["orders"] })}
+      />
     </div>
   );
 }
