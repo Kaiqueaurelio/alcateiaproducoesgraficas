@@ -58,11 +58,11 @@ export function ProductionDetail({ open, onOpenChange, orderId, onChanged }: Pro
     const statusChanged = newStatus && newStatus !== order?.production_status;
     const { error } = await supabase.from("production_updates").insert({
       order_id: orderId, author_id: user?.id ?? null, author_name: authorName,
-      status: statusChanged ? newStatus : null, note: note.trim(),
+      status: statusChanged ? (newStatus as any) : null, note: note.trim(),
     });
     if (error) { setSaving(false); return toast.error(error.message); }
     if (statusChanged) {
-      await supabase.from("orders").update({ production_status: newStatus }).eq("id", orderId);
+      await supabase.from("orders").update({ production_status: newStatus as any }).eq("id", orderId);
     }
     setNote("");
     setSaving(false);
