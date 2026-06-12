@@ -1,10 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { brl, fmtDate, PAYMENT_STATUS_LABEL, PRODUCTION_STATUS_LABEL } from "@/lib/format";
 import { toast } from "sonner";
+import { ProductionDetail } from "@/components/ProductionDetail";
+import { UserCircle2 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/production")({ component: Kanban });
 
@@ -16,6 +19,7 @@ type ProdStatus = typeof COLUMNS[number];
 
 function Kanban() {
   const qc = useQueryClient();
+  const [detailId, setDetailId] = useState<string | null>(null);
   const { data } = useQuery({
     queryKey: ["kanban"],
     queryFn: async () => {
@@ -32,6 +36,7 @@ function Kanban() {
   }
 
   return (
+    <>
     <div className="flex gap-3 overflow-x-auto pb-4">
       {COLUMNS.map((col) => {
         const rows = (data ?? []).filter((o) => o.production_status === col);
@@ -46,10 +51,16 @@ function Kanban() {
             <div className="bg-muted/40 rounded-b-lg p-2 min-h-[200px] space-y-2">
               {rows.map((o) => (
                 <Card key={o.id} draggable onDragStart={(e) => e.dataTransfer.setData("text/plain", o.id)}
-                  className="p-3 cursor-grab active:cursor-grabbing">
+                  onClick={() => setDetailId(o.id)}
+                  className="p-3 cursor-pointer hover:ring-2 hover:ring-gold/50 transition">
                   <div className="flex justify-between text-xs text-muted-foreground"><span className="font-mono">#{o.number}</span><span>{fmtDate(o.deadline)}</span></div>
                   <div className="font-medium text-sm mt-1">{o.clients?.name}</div>
                   <div className="text-xs text-muted-foreground truncate">{o.title || o.description}</div>
+                  {o.assignee_name && (
+                    <div className="flex items-center gap-1 text-xs text-primary mt-1">
+                      <UserCircle2 className="w-3 h-3" />{o.assignee_name}
+                    </div>
+                  )}
                   <div className="flex items-center justify-between mt-2">
                     <span className="font-mono text-sm">{brl(o.total)}</span>
                     <Badge variant="outline" className="text-[10px]">{PAYMENT_STATUS_LABEL[o.payment_status]}</Badge>
@@ -63,5 +74,8 @@ function Kanban() {
         );
       })}
     </div>
+    <ProductionDetail open={!!detailId} onOpenChange={(v) => !v && setDetailId(null)} orderId={detailId}
+      onChanged={() => { qc.invalidateQueries({ queryKey: ["kanban"] }); qc.invalidateQueries({ queryKey: ["orders"] }); qc.invalidateQueries({ queryKey: ["dashboard"] }); }} />
+    </>
   );
 }
