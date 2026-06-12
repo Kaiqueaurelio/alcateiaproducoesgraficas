@@ -31,7 +31,7 @@ export function OrderEditor({ open, onOpenChange, orderId, onSaved, fromQuoteId 
   const [form, setForm] = useState<any>({
     client_id: "", title: "", description: "", measurements: "", material: "", finishing: "",
     client_notes: "", internal_notes: "", total: 0, paid: 0, payment_method: "",
-    production_status: "aguardando_arte", deadline: "", urgent: false,
+    production_status: "aguardando_arte", deadline: "", urgent: false, assignee_name: "",
   });
   const [items, setItems] = useState<Item[]>([]);
 
@@ -54,7 +54,7 @@ export function OrderEditor({ open, onOpenChange, orderId, onSaved, fromQuoteId 
         setItems((qi ?? []).map((i: any) => ({ description: i.description, quantity: +i.quantity, unit_price: +i.unit_price, subtotal: +i.subtotal, service_id: i.service_id })));
       })();
     } else {
-      setForm({ client_id: "", title: "", description: "", measurements: "", material: "", finishing: "", client_notes: "", internal_notes: "", total: 0, paid: 0, payment_method: "", production_status: "aguardando_arte", deadline: "", urgent: false });
+      setForm({ client_id: "", title: "", description: "", measurements: "", material: "", finishing: "", client_notes: "", internal_notes: "", total: 0, paid: 0, payment_method: "", production_status: "aguardando_arte", deadline: "", urgent: false, assignee_name: "" });
       setItems([]);
     }
   }, [open, orderId, fromQuoteId]);
@@ -80,6 +80,7 @@ export function OrderEditor({ open, onOpenChange, orderId, onSaved, fromQuoteId 
       total, paid: Number(form.paid) || 0, payment_method: form.payment_method || null,
       production_status: form.production_status,
       deadline: form.deadline || null, urgent: !!form.urgent,
+      assignee_name: form.assignee_name || null,
       quote_id: form.quote_id ?? null,
     };
     let id = orderId;
@@ -183,6 +184,9 @@ export function OrderEditor({ open, onOpenChange, orderId, onSaved, fromQuoteId 
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>{PROD_STATUSES.map((s) => <SelectItem key={s} value={s}>{PRODUCTION_STATUS_LABEL[s]}</SelectItem>)}</SelectContent>
               </Select>
+            </div>
+            <div><Label>Responsável (quem executa)</Label>
+              <Input placeholder="Ex.: Caíque" value={form.assignee_name ?? ""} onChange={(e) => setForm({ ...form, assignee_name: e.target.value })} />
             </div>
             <div className="flex items-center gap-2"><Switch checked={!!form.urgent} onCheckedChange={(v) => setForm({ ...form, urgent: v })} /><Label>Marcar como urgente</Label></div>
           </div>
