@@ -39,9 +39,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => sub.subscription.unsubscribe();
   }, []);
 
+  async function ensureBuckets() {
+    const buckets = ["company-assets", "briefing-files", "arquivos"];
+    for (const bucketId of buckets) {
+      try {
+        const { data: bucket, error: getError } = await supabase.storage.getBucket(bucketId);
+        if (getError || !bucket) {
+          console.log(`[Storage] Tentando criar bucket: ${bucketId}`);
+          const isPublic = bucketId === "company-assets";
+          await supabase.storage.createBucket(bucketId, {
+            public: isPublic,
+            fileSizeLimit: 52428800, // 50MB
+          });
+        }
+      } catch (e) {
+        console.error(`[Storage] Erro ao verificar/criar bucket ${bucketId}:`, e);
+      }
+    }
+  }
+
   async function loadRoles(userId: string) {
     const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId);
-    setRoles((data?.map((r) => r.role as AppRole)) ?? []);
+    const userRoles = (data?.map((r) => r.role as AppRole)) ?? [];
+    setRoles(userRoles);
+    
+    if (userRoles.includes("administrador")) {
+      ensureBuckets();
+    }
   }
 
   const value: AuthCtx = {
