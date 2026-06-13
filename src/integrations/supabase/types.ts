@@ -275,6 +275,7 @@ export type Database = {
       }
       orders: {
         Row: {
+          assigned_to: string | null
           assignee_id: string | null
           assignee_name: string | null
           attendant_id: string | null
@@ -282,11 +283,13 @@ export type Database = {
           client_notes: string | null
           created_at: string
           created_by: string | null
+          current_activity: string | null
           deadline: string | null
           description: string | null
           finishing: string | null
           id: string
           internal_notes: string | null
+          last_progress_at: string | null
           material: string | null
           measurements: string | null
           number: number
@@ -294,6 +297,7 @@ export type Database = {
           payment_method: string | null
           payment_status: Database["public"]["Enums"]["payment_status"]
           production_status: Database["public"]["Enums"]["production_status"]
+          progress: number
           quote_id: string | null
           title: string | null
           total: number
@@ -301,6 +305,7 @@ export type Database = {
           urgent: boolean
         }
         Insert: {
+          assigned_to?: string | null
           assignee_id?: string | null
           assignee_name?: string | null
           attendant_id?: string | null
@@ -308,11 +313,13 @@ export type Database = {
           client_notes?: string | null
           created_at?: string
           created_by?: string | null
+          current_activity?: string | null
           deadline?: string | null
           description?: string | null
           finishing?: string | null
           id?: string
           internal_notes?: string | null
+          last_progress_at?: string | null
           material?: string | null
           measurements?: string | null
           number?: number
@@ -320,6 +327,7 @@ export type Database = {
           payment_method?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
           production_status?: Database["public"]["Enums"]["production_status"]
+          progress?: number
           quote_id?: string | null
           title?: string | null
           total?: number
@@ -327,6 +335,7 @@ export type Database = {
           urgent?: boolean
         }
         Update: {
+          assigned_to?: string | null
           assignee_id?: string | null
           assignee_name?: string | null
           attendant_id?: string | null
@@ -334,11 +343,13 @@ export type Database = {
           client_notes?: string | null
           created_at?: string
           created_by?: string | null
+          current_activity?: string | null
           deadline?: string | null
           description?: string | null
           finishing?: string | null
           id?: string
           internal_notes?: string | null
+          last_progress_at?: string | null
           material?: string | null
           measurements?: string | null
           number?: number
@@ -346,6 +357,7 @@ export type Database = {
           payment_method?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
           production_status?: Database["public"]["Enums"]["production_status"]
+          progress?: number
           quote_id?: string | null
           title?: string | null
           total?: number
@@ -353,6 +365,13 @@ export type Database = {
           urgent?: boolean
         }
         Relationships: [
+          {
+            foreignKeyName: "orders_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "orders_client_id_fkey"
             columns: ["client_id"]
@@ -371,33 +390,46 @@ export type Database = {
       }
       production_updates: {
         Row: {
+          activity: string | null
           author_id: string | null
           author_name: string | null
           created_at: string
           id: string
-          note: string
+          note: string | null
           order_id: string
+          progress: number
           status: Database["public"]["Enums"]["production_status"] | null
         }
         Insert: {
+          activity?: string | null
           author_id?: string | null
           author_name?: string | null
           created_at?: string
           id?: string
-          note: string
+          note?: string | null
           order_id: string
+          progress?: number
           status?: Database["public"]["Enums"]["production_status"] | null
         }
         Update: {
+          activity?: string | null
           author_id?: string | null
           author_name?: string | null
           created_at?: string
           id?: string
-          note?: string
+          note?: string | null
           order_id?: string
+          progress?: number
           status?: Database["public"]["Enums"]["production_status"] | null
         }
         Relationships: [
+          {
+            foreignKeyName: "production_updates_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "production_updates_order_id_fkey"
             columns: ["order_id"]
