@@ -67,6 +67,25 @@
   --color-brand-orange: var(--brand-orange);
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
+  --color-store-primary: var(--store-primary);
+  --color-store-primary-light: var(--store-primary-light);
+  --color-store-primary-dark: var(--store-primary-dark);
+  --color-store-secondary: var(--store-secondary);
+  --color-store-secondary-dark: var(--store-secondary-dark);
+  --color-store-accent: var(--store-accent);
+  --color-store-accent-dark: var(--store-accent-dark);
+  --color-store-success: var(--store-success);
+  --color-store-danger: var(--store-danger);
+  --color-store-warning: var(--store-warning);
+  --color-store-bg: var(--store-bg);
+  --color-store-surface: var(--store-surface);
+  --color-store-surface-soft: var(--store-surface-soft);
+  --color-store-text: var(--store-text);
+  --color-store-text-muted: var(--store-text-muted);
+  --color-store-text-light: var(--store-text-light);
+  --color-store-border: var(--store-border);
+  --color-store-border-strong: var(--store-border-strong);
+  --font-store: var(--store-font);
 }
 
 :root {
@@ -114,6 +133,34 @@
   --sidebar-accent-foreground: oklch(0.97 0.01 250);
   --sidebar-border: oklch(0.3 0.06 258);
   --sidebar-ring: oklch(0.78 0.13 80);
+
+  /* Storefront design system tokens */
+  --store-primary: #172554;
+  --store-primary-light: #2563eb;
+  --store-primary-dark: #0f172a;
+  --store-secondary: #facc15;
+  --store-secondary-dark: #eab308;
+  --store-accent: #f97316;
+  --store-accent-dark: #ea580c;
+  --store-success: #16a34a;
+  --store-danger: #dc2626;
+  --store-warning: #f59e0b;
+  --store-bg: #f8fafc;
+  --store-surface: #ffffff;
+  --store-surface-soft: #f1f5f9;
+  --store-text: #0f172a;
+  --store-text-muted: #64748b;
+  --store-text-light: #94a3b8;
+  --store-border: #e2e8f0;
+  --store-border-strong: #cbd5e1;
+  --store-shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
+  --store-shadow-md: 0 8px 24px rgba(15, 23, 42, 0.1);
+  --store-shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.14);
+  --store-radius-sm: 6px;
+  --store-radius-md: 10px;
+  --store-radius-lg: 16px;
+  --store-radius-xl: 24px;
+  --store-font: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
 .dark {

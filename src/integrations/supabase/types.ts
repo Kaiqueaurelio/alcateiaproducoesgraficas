@@ -624,37 +624,61 @@ export type Database = {
       services: {
         Row: {
           active: boolean
+          badge: string | null
           base_price: number
           category: string
           created_at: string
           default_deadline_days: number | null
           description: string | null
           id: string
+          image_url: string | null
+          min_quantity: number | null
           name: string
+          rating: number | null
+          reviews_count: number
+          short_description: string | null
+          slug: string | null
+          specs: string[] | null
           unit: string | null
           updated_at: string
         }
         Insert: {
           active?: boolean
+          badge?: string | null
           base_price?: number
           category: string
           created_at?: string
           default_deadline_days?: number | null
           description?: string | null
           id?: string
+          image_url?: string | null
+          min_quantity?: number | null
           name: string
+          rating?: number | null
+          reviews_count?: number
+          short_description?: string | null
+          slug?: string | null
+          specs?: string[] | null
           unit?: string | null
           updated_at?: string
         }
         Update: {
           active?: boolean
+          badge?: string | null
           base_price?: number
           category?: string
           created_at?: string
           default_deadline_days?: number | null
           description?: string | null
           id?: string
+          image_url?: string | null
+          min_quantity?: number | null
           name?: string
+          rating?: number | null
+          reviews_count?: number
+          short_description?: string | null
+          slug?: string | null
+          specs?: string[] | null
           unit?: string | null
           updated_at?: string
         }
