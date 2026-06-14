@@ -1,6 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, ChevronRight, Sparkles, Upload, Send, PackageCheck } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronRight,
+  Sparkles,
+  Upload,
+  Send,
+  PackageCheck,
+  ShieldCheck,
+  Lock,
+  Server,
+  Cloud,
+  FileText,
+  Palette,
+  Bot,
+  AlertTriangle,
+  CheckCircle2,
+  Image as ImageIcon,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { StoreShell } from "@/components/storefront/StoreShell";
 import { Hero } from "@/components/storefront/Hero";
@@ -11,7 +28,7 @@ import {
   SectionHeader,
   type StoreProduct,
 } from "@/components/storefront/ProductCard";
-import { STORE_CATEGORIES, waLink } from "@/components/storefront/tokens";
+import { STORE_CATEGORIES, STORE_CONTACT, waLink } from "@/components/storefront/tokens";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -40,6 +57,9 @@ function HomePage() {
       <FeaturedSection />
       <CategoriesSection />
       <HowItWorks />
+      <ArtTipsSection />
+      <TechSecuritySection />
+      <ContactSection />
     </StoreShell>
   );
 }
@@ -165,6 +185,208 @@ function HowItWorks() {
         >
           Falar com a equipe no WhatsApp
         </a>
+      </div>
+    </section>
+  );
+}
+
+function ArtTipsSection() {
+  const tips = [
+    {
+      icon: FileText,
+      title: "PDF editável é o ideal",
+      desc: "Envie em PDF/X-1a ou PDF com fontes incorporadas. Mantém qualidade, cores e textos nítidos na impressão.",
+    },
+    {
+      icon: ImageIcon,
+      title: "300 DPI no tamanho final",
+      desc: "Para imagens, use 300 DPI em CMYK. Evite imagens baixadas da internet ou prints de tela — saem borradas.",
+    },
+    {
+      icon: Palette,
+      title: "Cores em CMYK + sangria de 3mm",
+      desc: "Trabalhe em CMYK (não RGB) e deixe 3mm de sangria além do corte para evitar bordas brancas.",
+    },
+    {
+      icon: Bot,
+      title: "Arte feita por IA? Avise!",
+      desc: "Imagens geradas por IA (Midjourney, DALL·E, etc.) costumam ter resolução baixa. Nos avise para tratarmos a arte antes de imprimir.",
+    },
+    {
+      icon: Sparkles,
+      title: "Arte feita no Canva? Conta pra gente",
+      desc: "No Canva, exporte como “PDF para impressão” com marcas de corte e sangria. Avise no envio para conferirmos antes da produção.",
+    },
+    {
+      icon: AlertTriangle,
+      title: "Confira o que NÃO mandar",
+      desc: "Evite JPG/PNG comprimido, Word/PowerPoint, fotos de tela e arquivos abaixo de 1 MB. Em caso de dúvida, mande tudo e a gente avalia.",
+    },
+  ];
+  return (
+    <section className="bg-[var(--store-surface)] py-12 sm:py-16">
+      <div className="mx-auto max-w-[1280px] px-4">
+        <SectionHeader
+          kicker="Boas práticas"
+          title="Como enviar sua arte na melhor qualidade"
+          description="Seguindo essas dicas, sua impressão sai impecável e o prazo é ainda mais rápido."
+        />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {tips.map((t) => (
+            <div
+              key={t.title}
+              className="rounded-[var(--store-radius-lg)] border border-[var(--store-border)] bg-white p-5 shadow-[var(--store-shadow-sm)]"
+            >
+              <div className="flex items-center gap-3">
+                <span className="grid h-10 w-10 place-items-center rounded-xl bg-[var(--store-primary)] text-white">
+                  <t.icon className="h-5 w-5" />
+                </span>
+                <p className="text-base font-extrabold text-[var(--store-text)]">{t.title}</p>
+              </div>
+              <p className="mt-3 text-sm text-[var(--store-text-muted)]">{t.desc}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-8 rounded-[var(--store-radius-lg)] border border-[var(--store-primary)]/15 bg-[var(--store-primary)]/5 p-5 text-sm text-[var(--store-text)]">
+          <p className="flex items-start gap-2">
+            <CheckCircle2 className="mt-0.5 h-5 w-5 text-[var(--store-success)]" />
+            <span>
+              <strong>Resumo rápido:</strong> PDF editável · 300 DPI · CMYK · sangria 3mm · avisar
+              se for IA ou Canva. Aceitamos PDF, AI, CDR, PSD, SVG, PNG e JPG até 50 MB.
+            </span>
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TechSecuritySection() {
+  const items = [
+    {
+      icon: Lock,
+      title: "Login criptografado",
+      desc: "Autenticação protegida e senhas com hash seguro. Seu acesso é só seu.",
+    },
+    {
+      icon: ShieldCheck,
+      title: "Arquivos privados",
+      desc: "Cada pedido tem link único. Suas artes ficam isoladas e só sua equipe enxerga.",
+    },
+    {
+      icon: Server,
+      title: "Banco com RLS",
+      desc: "Banco de dados com regras linha-a-linha (Row Level Security) — ninguém vê dados de outro cliente.",
+    },
+    {
+      icon: Cloud,
+      title: "Infra global",
+      desc: "Hospedagem em nuvem com HTTPS, backups e disponibilidade alta. App rápido em qualquer dispositivo.",
+    },
+  ];
+  return (
+    <section className="mx-auto max-w-[1280px] px-4 py-12 sm:py-16">
+      <SectionHeader
+        kicker="Tecnologia e segurança"
+        title="Um app moderno, rápido e protegido"
+        description="Construído com React, TanStack Start e backend gerenciado com criptografia, RLS e HTTPS de ponta a ponta."
+      />
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {items.map((it) => (
+          <div
+            key={it.title}
+            className="rounded-[var(--store-radius-lg)] border border-[var(--store-border)] bg-white p-5 shadow-[var(--store-shadow-sm)]"
+          >
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-[var(--store-success)]/10 text-[var(--store-success)]">
+              <it.icon className="h-5 w-5" />
+            </span>
+            <p className="mt-4 text-base font-extrabold text-[var(--store-text)]">{it.title}</p>
+            <p className="mt-1 text-sm text-[var(--store-text-muted)]">{it.desc}</p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-xs font-semibold text-[var(--store-text-muted)]">
+        {["React 19", "TanStack Start", "TypeScript", "Tailwind CSS", "Supabase", "HTTPS", "PWA"].map(
+          (t) => (
+            <span
+              key={t}
+              className="rounded-full border border-[var(--store-border)] bg-white px-3 py-1"
+            >
+              {t}
+            </span>
+          ),
+        )}
+      </div>
+    </section>
+  );
+}
+
+function ContactSection() {
+  return (
+    <section className="bg-[var(--store-primary-dark)] py-12 text-white sm:py-16">
+      <div className="mx-auto grid max-w-[1280px] gap-8 px-4 lg:grid-cols-2 lg:items-center">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--store-secondary)]">
+            Atendimento
+          </p>
+          <h2 className="mt-2 text-3xl font-extrabold sm:text-4xl">
+            Estamos por perto para tirar sua ideia do papel
+          </h2>
+          <p className="mt-3 text-white/70">
+            Fale com a equipe Alcateia's no WhatsApp, na loja ou por e-mail. Resposta rápida nos
+            horários de atendimento.
+          </p>
+          <a
+            href={waLink("Olá! Quero fazer um orçamento.")}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-flex h-12 items-center justify-center gap-2 rounded-[var(--store-radius-md)] bg-[var(--store-success)] px-6 text-sm font-extrabold uppercase tracking-wide text-white shadow-[var(--store-shadow-md)] hover:brightness-110"
+          >
+            <Send className="h-4 w-4" /> Falar no WhatsApp
+          </a>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="rounded-[var(--store-radius-lg)] bg-white/5 p-5">
+            <p className="text-xs font-bold uppercase tracking-wider text-[var(--store-secondary)]">
+              Telefone / WhatsApp
+            </p>
+            <p className="mt-2 text-lg font-extrabold">{STORE_CONTACT.phone}</p>
+          </div>
+          <div className="rounded-[var(--store-radius-lg)] bg-white/5 p-5">
+            <p className="text-xs font-bold uppercase tracking-wider text-[var(--store-secondary)]">
+              E-mail
+            </p>
+            <p className="mt-2 break-all text-base font-semibold">{STORE_CONTACT.email}</p>
+          </div>
+          <div className="rounded-[var(--store-radius-lg)] bg-white/5 p-5 sm:col-span-2">
+            <p className="text-xs font-bold uppercase tracking-wider text-[var(--store-secondary)]">
+              Endereço
+            </p>
+            <a
+              href={STORE_CONTACT.mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 block text-base font-semibold hover:text-[var(--store-secondary)]"
+            >
+              {STORE_CONTACT.address}
+              <br />
+              {STORE_CONTACT.city}
+            </a>
+          </div>
+          <div className="rounded-[var(--store-radius-lg)] bg-white/5 p-5 sm:col-span-2">
+            <p className="text-xs font-bold uppercase tracking-wider text-[var(--store-secondary)]">
+              Horário de atendimento
+            </p>
+            <ul className="mt-2 space-y-1 text-sm">
+              {STORE_CONTACT.hours.map((h) => (
+                <li key={h.day} className="flex justify-between gap-3">
+                  <span className="text-white/80">{h.day}</span>
+                  <span className="font-semibold">{h.time}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
   );

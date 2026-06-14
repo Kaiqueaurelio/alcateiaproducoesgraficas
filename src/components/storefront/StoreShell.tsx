@@ -13,7 +13,7 @@ import {
   Instagram,
   Facebook,
 } from "lucide-react";
-import { STORE_CATEGORIES, waLink } from "./tokens";
+import { STORE_CATEGORIES, STORE_CONTACT, waLink } from "./tokens";
 import { useState } from "react";
 
 export function StoreShell({ children }: { children: ReactNode }) {
@@ -230,16 +230,39 @@ function StoreFooter() {
           </h3>
           <ul className="mt-4 space-y-3 text-sm text-white/70">
             <li className="flex items-start gap-2">
-              <MessageCircle className="mt-0.5 h-4 w-4 shrink-0" /> WhatsApp para orçamento
+              <MessageCircle className="mt-0.5 h-4 w-4 shrink-0" />
+              <a
+                href={waLink("Olá! Vim do site.")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white"
+              >
+                WhatsApp {STORE_CONTACT.phone}
+              </a>
             </li>
             <li className="flex items-start gap-2">
-              <Phone className="mt-0.5 h-4 w-4 shrink-0" /> Seg a Sex, 9h às 18h
+              <Phone className="mt-0.5 h-4 w-4 shrink-0" />
+              <div>
+                {STORE_CONTACT.hours.map((h) => (
+                  <div key={h.day}>
+                    <strong className="text-white/90">{h.day}:</strong> {h.time}
+                  </div>
+                ))}
+              </div>
             </li>
             <li className="flex items-start gap-2">
-              <Mail className="mt-0.5 h-4 w-4 shrink-0" /> contato@alcateias.com.br
+              <Mail className="mt-0.5 h-4 w-4 shrink-0" /> {STORE_CONTACT.email}
             </li>
             <li className="flex items-start gap-2">
-              <MapPin className="mt-0.5 h-4 w-4 shrink-0" /> Retirada na loja ou entrega
+              <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
+              <a
+                href={STORE_CONTACT.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white"
+              >
+                {STORE_CONTACT.address}, {STORE_CONTACT.city}
+              </a>
             </li>
           </ul>
         </div>
