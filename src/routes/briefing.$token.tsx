@@ -211,6 +211,19 @@ function PublicBriefing() {
             </div>
             <div>
               <Label>Referências, logos, fotos e arquivos</Label>
+              <div className="mt-1 mb-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+                <p className="font-semibold">💡 Dicas para melhor qualidade na impressão:</p>
+                <ul className="mt-1 list-disc space-y-0.5 pl-4">
+                  <li>Prefira <strong>PDF editável</strong> com fontes incorporadas (PDF/X-1a).</li>
+                  <li>Imagens em <strong>300 DPI</strong> no tamanho final, em <strong>CMYK</strong>.</li>
+                  <li>Deixe <strong>3mm de sangria</strong> além do corte.</li>
+                  <li>
+                    Se a arte foi gerada por <strong>IA</strong> (Midjourney, DALL·E, ChatGPT) ou
+                    criada no <strong>Canva</strong>, escreva isso nas observações para
+                    conferirmos antes da produção.
+                  </li>
+                </ul>
+              </div>
               <label className="mt-1 flex cursor-pointer flex-col items-center rounded-xl border-2 border-dashed p-6 text-center hover:border-gold">
                 <FileUp className="mb-2 h-7 w-7 text-primary" />
                 <span className="text-sm font-medium">Selecionar arquivos</span>
@@ -285,10 +298,12 @@ function ArtReview({
   onReviewed: () => void;
 }) {
   const [url, setUrl] = useState<string | null>(null);
+  const [imgError, setImgError] = useState(false);
   const [comment, setComment] = useState("");
   const [marker, setMarker] = useState<{ x: number; y: number } | null>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    setImgError(false);
     supabase.storage
       .from("briefing-files")
       .createSignedUrl(version.storage_path, 3600)
@@ -315,7 +330,7 @@ function ArtReview({
         <strong>Arte V{version.version_number}</strong>
         <span className="text-xs text-muted-foreground">{version.status.replaceAll("_", " ")}</span>
       </div>
-      {url && isPreviewable(version.mime_type, version.file_name) ? (
+      {url && isPreviewable(version.mime_type, version.file_name) && !imgError ? (
         <div
           ref={imageRef}
           className="relative cursor-crosshair bg-slate-100"
@@ -331,6 +346,8 @@ function ArtReview({
             src={url}
             alt={`Arte V${version.version_number}`}
             className="max-h-96 w-full object-contain"
+            loading="lazy"
+            onError={() => setImgError(true)}
           />
           {marker && (
             <span
@@ -342,17 +359,27 @@ function ArtReview({
           )}
         </div>
       ) : (
-        url && (
-          <a
-            href={url}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center justify-center gap-2 p-8 text-sm text-primary"
-          >
-            <Download className="h-4 w-4" />
-            Abrir arquivo
-          </a>
-        )
+        <div className="flex flex-col items-center justify-center gap-2 p-8 text-sm">
+          {url ? (
+            <>
+              <p className="text-muted-foreground">
+                {imgError
+                  ? "Não foi possível pré-visualizar este arquivo."
+                  : "Pré-visualização não disponível para este formato."}
+              </p>
+              <a
+                href={url}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 font-semibold text-primary-foreground"
+              >
+                <Download className="h-4 w-4" /> Abrir / baixar arte
+              </a>
+            </>
+          ) : (
+            <p className="text-muted-foreground">Carregando arte...</p>
+          )}
+        </div>
       )}
       <div className="space-y-3 p-4">
         {version.notes && <p className="text-sm text-muted-foreground">{version.notes}</p>}
