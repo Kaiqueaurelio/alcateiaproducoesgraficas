@@ -15,6 +15,14 @@ import {
 } from "lucide-react";
 import { STORE_CATEGORIES, STORE_CONTACT, waLink } from "./tokens";
 import { useState } from "react";
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetClose,
+} from "@/components/ui/sheet";
 
 export function StoreShell({ children }: { children: ReactNode }) {
   return (
@@ -50,6 +58,7 @@ function TopPromoBar() {
 
 function StoreHeader() {
   const [q, setQ] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--store-border)] bg-[var(--store-surface)]/95 backdrop-blur">
       <div className="mx-auto flex max-w-[1280px] items-center gap-3 px-4 py-3 md:gap-6 md:py-4">
@@ -128,13 +137,49 @@ function StoreHeader() {
           </button>
         </nav>
 
-        <button
-          type="button"
-          aria-label="Menu"
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-lg border border-[var(--store-border)] bg-white md:hidden"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
+        <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+          <SheetTrigger asChild>
+            <button
+              type="button"
+              aria-label="Menu"
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-lg border border-[var(--store-border)] bg-white md:hidden"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-3/4 bg-[var(--store-surface)] p-0">
+            <SheetHeader className="border-b border-[var(--store-border)] px-4 py-4">
+              <SheetTitle className="text-left text-[var(--store-text)]">Menu</SheetTitle>
+            </SheetHeader>
+            <nav className="flex flex-col gap-0 py-2">
+              <a
+                href={waLink("Olá! Vim do site da Alcateia's.")}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-[var(--store-text)] hover:bg-[var(--store-surface-soft)] border-b border-[var(--store-border)]"
+              >
+                <MessageCircle className="h-4 w-4 text-[var(--store-success)]" />
+                Atendimento
+              </a>
+              <Link
+                to="/auth"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-[var(--store-text)] hover:bg-[var(--store-surface-soft)] border-b border-[var(--store-border)]"
+              >
+                <User className="h-4 w-4" />
+                Entrar
+              </Link>
+              <button
+                type="button"
+                className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-[var(--store-text)] hover:bg-[var(--store-surface-soft)] border-b border-[var(--store-border)] w-full text-left"
+              >
+                <ShoppingCart className="h-4 w-4" />
+                Carrinho (0)
+              </button>
+            </nav>
+          </SheetContent>
+        </Sheet>
       </div>
     </header>
   );
@@ -144,7 +189,7 @@ function CategoryNav() {
   return (
     <nav
       aria-label="Categorias"
-      className="border-b border-[var(--store-border)] bg-[var(--store-surface)]"
+      className="hidden border-b border-[var(--store-border)] bg-[var(--store-surface)] md:block"
     >
       <div className="mx-auto flex max-w-[1280px] gap-1 overflow-x-auto px-4 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {STORE_CATEGORIES.map((c) => (
