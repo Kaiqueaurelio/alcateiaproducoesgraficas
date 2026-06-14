@@ -63,14 +63,12 @@ function StoreHeader() {
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--store-border)] bg-[var(--store-surface)]/95 backdrop-blur">
       <div className="mx-auto flex max-w-[1280px] items-center gap-3 px-4 py-3 md:gap-6 md:py-4">
-        <Link to="/" className="flex shrink-0 items-center gap-2">
-          <div className="grid h-10 w-10 place-items-center rounded-lg p-0 shadow-sm md:h-12 md:w-12">
-            <img
-              src="/brand/alcateia-symbol.png"
-              alt="Alcateia's"
-              className="h-full w-full object-contain"
-            />
-          </div>
+        <Link to="/" className="flex shrink-0 items-center gap-3">
+          <img
+            src="/brand/alcateia-symbol.png"
+            alt="Alcateia's"
+            className="h-12 w-auto md:h-14 object-contain"
+          />
           <div className="hidden leading-tight sm:block">
             <div className="text-base font-extrabold text-[var(--store-primary)]">
               Alcateia's
@@ -151,13 +149,11 @@ function StoreHeader() {
           <SheetContent side="left" className="w-full sm:w-80 bg-white p-0 flex flex-col">
             <div className="flex items-center justify-between border-b border-[var(--store-border)] px-6 py-5">
               <div className="flex items-center gap-3">
-                <div className="grid h-10 w-10 place-items-center rounded-lg p-0">
-                  <img
-                    src="/brand/alcateia-symbol.png"
-                    alt="Alcateia's"
-                    className="h-full w-full object-contain"
-                  />
-                </div>
+                <img
+                  src="/brand/alcateia-symbol.png"
+                  alt="Alcateia's"
+                  className="h-11 w-auto object-contain"
+                />
                 <div className="leading-tight">
                   <div className="text-sm font-extrabold text-[var(--store-primary)]">
                     Alcateia's
@@ -298,14 +294,12 @@ function StoreFooter() {
     <footer className="mt-16 bg-[var(--store-primary-dark)] text-white">
       <div className="mx-auto grid max-w-[1280px] gap-10 px-4 py-12 md:grid-cols-4">
         <div>
-          <div className="flex items-center gap-2">
-            <div className="grid h-12 w-12 place-items-center rounded-lg p-0">
-              <img
-                src="/brand/alcateia-symbol.png"
-                alt="Alcateia's"
-                className="h-full w-full object-contain"
-              />
-            </div>
+          <div className="flex items-center gap-3">
+            <img
+              src="/brand/alcateia-symbol.png"
+              alt="Alcateia's"
+              className="h-16 w-auto object-contain"
+            />
             <div>
               <div className="text-lg font-extrabold">Alcateia's</div>
               <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--store-secondary)]">
