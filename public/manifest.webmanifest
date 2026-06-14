@@ -1,0 +1,31 @@
+{
+  "name": "Alcateia's Produções Gráficas",
+  "short_name": "Alcateia's",
+  "description": "Gráfica online: cartões, canecas, camisetas, adesivos, banners e brindes personalizados.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#172554",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/brand/alcateia-symbol.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/brand/alcateia-symbol.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/brand/alcateia-logo.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

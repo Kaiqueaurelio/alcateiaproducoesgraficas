@@ -15,7 +15,22 @@ export const STORE_CATEGORIES = [
   { slug: "Plotagem", label: "Plotagem" },
 ] as const;
 
-export const WHATSAPP_NUMBER = "5500000000000";
+export const WHATSAPP_NUMBER = "5511972235342";
+
+export const STORE_CONTACT = {
+  phone: "+55 11 97223-5342",
+  whatsapp: WHATSAPP_NUMBER,
+  email: "contato@alcateias.com.br",
+  address: "Estrada do Cabreúva, 703 — Vila Santa Lúcia",
+  city: "Carapicuíba — SP, CEP 06321-001",
+  hours: [
+    { day: "Segunda a Sexta", time: "09:00 – 18:00" },
+    { day: "Sábado", time: "09:00 – 13:00" },
+    { day: "Domingo", time: "Fechado" },
+  ],
+  mapsUrl:
+    "https://www.google.com/maps/search/?api=1&query=Estrada+do+Cabre%C3%BAva+703+Vila+Santa+L%C3%BAcia+Carapicu%C3%ADba+SP",
+};
 
 export function waLink(message: string) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
