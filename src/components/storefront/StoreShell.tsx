@@ -12,6 +12,7 @@ import {
   MapPin,
   Instagram,
   Facebook,
+  X,
 } from "lucide-react";
 import { STORE_CATEGORIES, STORE_CONTACT, waLink } from "./tokens";
 import { useState } from "react";
@@ -63,7 +64,7 @@ function StoreHeader() {
     <header className="sticky top-0 z-30 border-b border-[var(--store-border)] bg-[var(--store-surface)]/95 backdrop-blur">
       <div className="mx-auto flex max-w-[1280px] items-center gap-3 px-4 py-3 md:gap-6 md:py-4">
         <Link to="/" className="flex shrink-0 items-center gap-2">
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-[var(--store-primary)] p-1 shadow-sm md:h-12 md:w-12">
+          <div className="grid h-10 w-10 place-items-center rounded-lg p-0 shadow-sm md:h-12 md:w-12">
             <img
               src="/brand/alcateia-symbol.png"
               alt="Alcateia's"
@@ -142,42 +143,123 @@ function StoreHeader() {
             <button
               type="button"
               aria-label="Menu"
-              className="grid h-11 w-11 shrink-0 place-items-center rounded-lg border border-[var(--store-border)] bg-white md:hidden"
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-lg border border-[var(--store-border)] bg-white md:hidden transition-colors hover:bg-[var(--store-surface-soft)]"
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="h-5 w-5 text-[var(--store-primary)]" />
             </button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-3/4 bg-[var(--store-surface)] p-0">
-            <SheetHeader className="border-b border-[var(--store-border)] px-4 py-4">
-              <SheetTitle className="text-left text-[var(--store-text)]">Menu</SheetTitle>
-            </SheetHeader>
-            <nav className="flex flex-col gap-0 py-2">
-              <a
-                href={waLink("Olá! Vim do site da Alcateia's.")}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-[var(--store-text)] hover:bg-[var(--store-surface-soft)] border-b border-[var(--store-border)]"
-              >
-                <MessageCircle className="h-4 w-4 text-[var(--store-success)]" />
-                Atendimento
-              </a>
-              <Link
-                to="/auth"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-[var(--store-text)] hover:bg-[var(--store-surface-soft)] border-b border-[var(--store-border)]"
-              >
-                <User className="h-4 w-4" />
-                Entrar
-              </Link>
-              <button
-                type="button"
-                className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-[var(--store-text)] hover:bg-[var(--store-surface-soft)] border-b border-[var(--store-border)] w-full text-left"
-              >
-                <ShoppingCart className="h-4 w-4" />
-                Carrinho (0)
-              </button>
+          <SheetContent side="left" className="w-full sm:w-80 bg-white p-0 flex flex-col">
+            <div className="flex items-center justify-between border-b border-[var(--store-border)] px-6 py-5">
+              <div className="flex items-center gap-3">
+                <div className="grid h-10 w-10 place-items-center rounded-lg p-0">
+                  <img
+                    src="/brand/alcateia-symbol.png"
+                    alt="Alcateia's"
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+                <div className="leading-tight">
+                  <div className="text-sm font-extrabold text-[var(--store-primary)]">
+                    Alcateia's
+                  </div>
+                  <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-[var(--store-accent)]">
+                    Gráfica
+                  </div>
+                </div>
+              </div>
+              <SheetClose className="rounded-lg p-1 hover:bg-[var(--store-surface-soft)]">
+                <X className="h-5 w-5 text-[var(--store-text)]" />
+              </SheetClose>
+            </div>
+
+            <nav className="flex-1 overflow-y-auto py-4">
+              {/* Categorias */}
+              <div className="border-b border-[var(--store-border)] px-6 py-4">
+                <h3 className="text-xs font-bold uppercase tracking-wide text-[var(--store-text-muted)] mb-3">
+                  Categorias
+                </h3>
+                <div className="space-y-2">
+                  {STORE_CATEGORIES.map((c) => (
+                    <Link
+                      key={c.slug}
+                      to="/produtos"
+                      search={{ cat: c.slug }}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block px-3 py-2 rounded-lg text-sm font-medium text-[var(--store-text)] hover:bg-[var(--store-surface-soft)] transition-colors"
+                    >
+                      {c.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Ações principais */}
+              <div className="border-b border-[var(--store-border)] px-6 py-4">
+                <h3 className="text-xs font-bold uppercase tracking-wide text-[var(--store-text-muted)] mb-3">
+                  Minha Conta
+                </h3>
+                <div className="space-y-2">
+                  <Link
+                    to="/auth"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium text-[var(--store-text)] hover:bg-[var(--store-surface-soft)] transition-colors"
+                  >
+                    <User className="h-4 w-4 text-[var(--store-primary)]" />
+                    Entrar na conta
+                  </Link>
+                  <button
+                    type="button"
+                    className="w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium text-[var(--store-text)] hover:bg-[var(--store-surface-soft)] transition-colors text-left"
+                  >
+                    <ShoppingCart className="h-4 w-4 text-[var(--store-primary)]" />
+                    Carrinho (0)
+                  </button>
+                </div>
+              </div>
+
+              {/* Atendimento */}
+              <div className="px-6 py-4">
+                <h3 className="text-xs font-bold uppercase tracking-wide text-[var(--store-text-muted)] mb-3">
+                  Atendimento
+                </h3>
+                <a
+                  href={waLink("Olá! Vim do site da Alcateia's.")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium text-[var(--store-text)] hover:bg-[var(--store-surface-soft)] transition-colors bg-[var(--store-secondary)]/10"
+                >
+                  <MessageCircle className="h-4 w-4 text-[var(--store-success)]" />
+                  <div>
+                    <div className="font-semibold text-[var(--store-success)]">WhatsApp</div>
+                    <div className="text-xs text-[var(--store-text-muted)]">{STORE_CONTACT.phone}</div>
+                  </div>
+                </a>
+              </div>
             </nav>
+
+            {/* Footer do menu */}
+            <div className="border-t border-[var(--store-border)] px-6 py-4 bg-[var(--store-surface-soft)]">
+              <p className="text-xs text-[var(--store-text-muted)] leading-relaxed mb-3">
+                Produtos personalizados com acabamento profissional para sua marca brilhar.
+              </p>
+              <div className="flex gap-2">
+                <a
+                  href="#"
+                  aria-label="Instagram"
+                  className="grid h-9 w-9 place-items-center rounded-lg bg-white hover:bg-[var(--store-primary)] hover:text-white transition-colors"
+                >
+                  <Instagram className="h-4 w-4" />
+                </a>
+                <a
+                  href="#"
+                  aria-label="Facebook"
+                  className="grid h-9 w-9 place-items-center rounded-lg bg-white hover:bg-[var(--store-primary)] hover:text-white transition-colors"
+                >
+                  <Facebook className="h-4 w-4" />
+                </a>
+              </div>
+            </div>
           </SheetContent>
         </Sheet>
       </div>
@@ -217,7 +299,7 @@ function StoreFooter() {
       <div className="mx-auto grid max-w-[1280px] gap-10 px-4 py-12 md:grid-cols-4">
         <div>
           <div className="flex items-center gap-2">
-            <div className="grid h-12 w-12 place-items-center rounded-xl bg-white/10 p-1">
+            <div className="grid h-12 w-12 place-items-center rounded-lg p-0">
               <img
                 src="/brand/alcateia-symbol.png"
                 alt="Alcateia's"
