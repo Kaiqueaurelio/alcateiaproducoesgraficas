@@ -61,8 +61,14 @@ function Page() {
       setUploadingLogo(false);
       return toast.error(error.message);
     }
-    const { data: publicData } = supabase.storage.from("company-assets").getPublicUrl(path);
-    const logoUrl = publicData.publicUrl;
+    const { data: signedData, error: signedError } = await supabase.storage
+      .from("company-assets")
+      .createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
+    if (signedError || !signedData) {
+      setUploadingLogo(false);
+      return toast.error(signedError?.message ?? "Não foi possível gerar URL da logo");
+    }
+    const logoUrl = signedData.signedUrl;
     const { error: updateError } = await supabase
       .from("company_settings")
       .update({ logo_url: logoUrl })

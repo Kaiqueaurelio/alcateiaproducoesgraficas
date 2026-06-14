@@ -64,7 +64,7 @@ export function Hero() {
             <div className="absolute -left-10 top-10 h-44 w-44 rounded-[var(--store-radius-xl)] bg-[var(--store-secondary)]/30 blur-2xl" />
             <div className="relative rounded-[var(--store-radius-xl)] border border-white/15 bg-white/5 p-4 shadow-2xl backdrop-blur">
               <img
-                src="https://images.unsplash.com/photo-1606293459209-baeca0a90a0e?w=900&q=80"
+                src="https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=900&q=80"
                 alt="Mockup de produtos gráficos personalizados"
                 className="aspect-[4/3] w-full rounded-[var(--store-radius-lg)] object-cover"
               />
