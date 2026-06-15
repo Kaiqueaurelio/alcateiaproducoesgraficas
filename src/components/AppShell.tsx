@@ -22,6 +22,8 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { useAuth, ROLE_LABEL, type AppRole } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import { EllaChat } from "@/components/EllaChat";
+import { Calculator, Sparkles } from "lucide-react";
 
 type NavItem = {
   to: string;
@@ -94,6 +96,14 @@ const NAV: NavItem[] = [
     description: "Catálogo e preços",
     icon: Package,
     section: "Administração",
+    roles: ["administrador", "atendente"],
+  },
+  {
+    to: "/calculator",
+    label: "Calculadora PDV",
+    description: "Cálculo de serviços gráficos",
+    icon: Calculator,
+    section: "Operação",
     roles: ["administrador", "atendente"],
   },
   {
@@ -351,6 +361,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         <main className="app-page flex-1">{children}</main>
       </div>
+      <EllaChat />
     </div>
   );
 }
