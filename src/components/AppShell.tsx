@@ -144,7 +144,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const userInitial = user?.email?.charAt(0).toUpperCase() ?? "A";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen w-screen bg-background overflow-x-hidden">
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-40 flex w-72 flex-col overflow-hidden bg-sidebar text-sidebar-foreground shadow-2xl transition-transform md:translate-x-0",
@@ -268,14 +268,14 @@ export function AppShell({ children }: { children: ReactNode }) {
         />
       )}
 
-      <div className="flex min-h-screen min-w-0 flex-col md:ml-72">
+      <div className="flex min-h-screen w-full flex-col md:ml-72">
         <div className="hidden h-8 items-center justify-between bg-brand-blue px-6 text-[11px] font-medium text-white/70 lg:flex">
           <span>Produção gráfica organizada do briefing à entrega</span>
           <span className="font-semibold text-brand-yellow">Alcateia's Produções Gráficas</span>
         </div>
 
-        <header className="sticky top-0 z-20 border-b border-border/80 bg-white/92 px-4 backdrop-blur-xl md:px-6 lg:top-0">
-          <div className="flex h-[72px] items-center gap-3">
+        <header className="sticky top-0 z-20 border-b border-border/80 bg-white/92 px-3 backdrop-blur-xl md:px-6 lg:top-0">
+          <div className="flex h-[72px] items-center gap-2 md:gap-3 w-full overflow-x-auto">
             <button
               type="button"
               className="rounded-xl border border-border bg-white p-2.5 text-brand-blue shadow-sm md:hidden"
@@ -294,7 +294,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               </h1>
             </div>
 
-            <div className="relative ml-auto hidden w-full max-w-xl lg:block">
+            <div className="relative ml-auto hidden w-full max-w-md xl:max-w-xl lg:block">
               <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 value={search}
@@ -359,7 +359,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </header>
 
-        <main className="app-page flex-1">{children}</main>
+        <main className="app-page flex-1 w-full overflow-x-hidden">{children}</main>
       </div>
       <EllaChat />
     </div>

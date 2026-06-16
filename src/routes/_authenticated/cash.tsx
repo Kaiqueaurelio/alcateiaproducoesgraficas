@@ -10,7 +10,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Plus, Trash2, ArrowDownCircle, ArrowUpCircle } from "lucide-react";
+import { Plus, Trash2, ArrowDownCircle, ArrowUpCircle, Calendar } from "lucide-react";
 import { toast } from "sonner";
 import { brl, fmtDate, CASH_IN_CATEGORIES, CASH_OUT_CATEGORIES, PAYMENT_METHODS } from "@/lib/format";
 
@@ -29,6 +29,17 @@ function CashPage() {
     },
   });
 
+  // Calcular saldo do dia
+  const today = new Date().toISOString().slice(0, 10);
+  const todayData = (data ?? []).filter((e) => e.entry_date === today);
+  const todayTotals = todayData.reduce(
+    (acc, e) => {
+      if (e.type === "entrada") acc.in += +e.amount; else acc.out += +e.amount;
+      return acc;
+    }, { in: 0, out: 0 },
+  );
+
+  // Calcular totais gerais
   const totals = (data ?? []).reduce(
     (acc, e) => {
       if (e.type === "entrada") acc.in += +e.amount; else acc.out += +e.amount;
@@ -56,14 +67,52 @@ function CashPage() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-3 gap-3">
-        <Card className="p-4"><div className="text-xs text-muted-foreground">Entradas</div><div className="text-xl font-bold text-emerald-600">{brl(totals.in)}</div></Card>
-        <Card className="p-4"><div className="text-xs text-muted-foreground">Saídas</div><div className="text-xl font-bold text-destructive">{brl(totals.out)}</div></Card>
-        <Card className="p-4 bg-primary text-primary-foreground"><div className="text-xs text-primary-foreground/80">Saldo</div><div className="text-xl font-bold text-gold">{brl(totals.in - totals.out)}</div></Card>
+      {/* Saldo do Dia - Destaque Principal */}
+      <div className="bg-gradient-to-r from-brand-yellow to-brand-orange rounded-2xl p-6 text-brand-blue shadow-lg border border-brand-yellow/30">
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Calendar className="w-5 h-5 opacity-75" />
+              <p className="text-sm font-semibold opacity-90">SALDO DO DIA</p>
+            </div>
+            <p className="text-4xl md:text-5xl font-black">{brl(todayTotals.in - todayTotals.out)}</p>
+          </div>
+          <div className="text-right">
+            <div className="mb-3">
+              <p className="text-sm opacity-75 mb-1">Entradas</p>
+              <p className="text-2xl font-bold text-emerald-600">{brl(todayTotals.in)}</p>
+            </div>
+            <div>
+              <p className="text-sm opacity-75 mb-1">Saídas</p>
+              <p className="text-2xl font-bold text-destructive">{brl(todayTotals.out)}</p>
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* Totais Gerais */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <Card className="p-4">
+          <div className="text-xs text-muted-foreground font-semibold mb-2">ENTRADAS (TOTAL)</div>
+          <div className="text-2xl font-bold text-emerald-600">{brl(totals.in)}</div>
+        </Card>
+        <Card className="p-4">
+          <div className="text-xs text-muted-foreground font-semibold mb-2">SAÍDAS (TOTAL)</div>
+          <div className="text-2xl font-bold text-destructive">{brl(totals.out)}</div>
+        </Card>
+        <Card className="p-4 bg-primary text-primary-foreground">
+          <div className="text-xs text-primary-foreground/80 font-semibold mb-2">SALDO GERAL</div>
+          <div className="text-2xl font-bold text-gold">{brl(totals.in - totals.out)}</div>
+        </Card>
+      </div>
+
+      {/* Botão Novo Lançamento */}
       <div className="flex justify-end">
         <Dialog open={open} onOpenChange={setOpen}>
-          <Button onClick={() => setOpen(true)}><Plus className="w-4 h-4 mr-1" />Novo lançamento</Button>
+          <Button onClick={() => setOpen(true)} className="bg-brand-yellow hover:bg-brand-yellow/90 text-brand-blue font-bold">
+            <Plus className="w-4 h-4 mr-2" />
+            Novo lançamento
+          </Button>
           <DialogContent>
             <DialogHeader><DialogTitle>Novo lançamento</DialogTitle></DialogHeader>
             <div className="space-y-3">
@@ -98,17 +147,21 @@ function CashPage() {
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Tabela de Lançamentos */}
       <Card>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-muted text-muted-foreground"><tr>
-              <th className="text-left p-3 w-10"></th>
-              <th className="text-left p-3">Data</th>
-              <th className="text-left p-3">Descrição</th>
-              <th className="text-left p-3 hidden md:table-cell">Categoria</th>
-              <th className="text-right p-3">Valor</th>
-              <th></th>
-            </tr></thead>
+            <thead className="bg-muted text-muted-foreground">
+              <tr>
+                <th className="text-left p-3 w-10"></th>
+                <th className="text-left p-3">Data</th>
+                <th className="text-left p-3">Descrição</th>
+                <th className="text-left p-3 hidden md:table-cell">Categoria</th>
+                <th className="text-right p-3">Valor</th>
+                <th className="w-10"></th>
+              </tr>
+            </thead>
             <tbody>
               {(data ?? []).map((e) => (
                 <tr key={e.id} className="border-t hover:bg-muted/30">
