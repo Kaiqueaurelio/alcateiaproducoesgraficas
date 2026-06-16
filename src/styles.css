@@ -223,6 +223,7 @@
       ),
       linear-gradient(180deg, color-mix(in oklab, var(--background) 96%, white), var(--background));
     background-attachment: fixed;
+    overflow-x: hidden;
   }
 
   h1,
@@ -248,8 +249,10 @@
 @layer components {
   .app-page {
     width: 100%;
+    min-width: 0;
     max-width: 1600px;
     margin-inline: auto;
+    overflow-x: hidden;
   }
 
   .app-surface {

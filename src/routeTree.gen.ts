@@ -24,6 +24,8 @@ import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedClientsRouteImport } from './routes/_authenticated/clients'
 import { Route as AuthenticatedCashRouteImport } from './routes/_authenticated/cash'
+import { Route as AuthenticatedCalculatorRouteImport } from './routes/_authenticated/calculator'
+import { Route as AuthenticatedPdvRouteImport } from './routes/_authenticated/pdv'
 
 const ProdutosRoute = ProdutosRouteImport.update({
   id: '/produtos',
@@ -100,15 +102,27 @@ const AuthenticatedCashRoute = AuthenticatedCashRouteImport.update({
   path: '/cash',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCalculatorRoute = AuthenticatedCalculatorRouteImport.update({
+  id: '/calculator',
+  path: '/calculator',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPdvRoute = AuthenticatedPdvRouteImport.update({
+  id: '/pdv',
+  path: '/pdv',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/produtos': typeof ProdutosRoute
   '/cash': typeof AuthenticatedCashRoute
+  '/calculator': typeof AuthenticatedCalculatorRoute
   '/clients': typeof AuthenticatedClientsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/orders': typeof AuthenticatedOrdersRoute
+  '/pdv': typeof AuthenticatedPdvRoute
   '/production': typeof AuthenticatedProductionRoute
   '/quotes': typeof AuthenticatedQuotesRoute
   '/receivables': typeof AuthenticatedReceivablesRoute
@@ -122,9 +136,11 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/produtos': typeof ProdutosRoute
   '/cash': typeof AuthenticatedCashRoute
+  '/calculator': typeof AuthenticatedCalculatorRoute
   '/clients': typeof AuthenticatedClientsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/orders': typeof AuthenticatedOrdersRoute
+  '/pdv': typeof AuthenticatedPdvRoute
   '/production': typeof AuthenticatedProductionRoute
   '/quotes': typeof AuthenticatedQuotesRoute
   '/receivables': typeof AuthenticatedReceivablesRoute
@@ -140,9 +156,11 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/produtos': typeof ProdutosRoute
   '/_authenticated/cash': typeof AuthenticatedCashRoute
+  '/_authenticated/calculator': typeof AuthenticatedCalculatorRoute
   '/_authenticated/clients': typeof AuthenticatedClientsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
+  '/_authenticated/pdv': typeof AuthenticatedPdvRoute
   '/_authenticated/production': typeof AuthenticatedProductionRoute
   '/_authenticated/quotes': typeof AuthenticatedQuotesRoute
   '/_authenticated/receivables': typeof AuthenticatedReceivablesRoute
@@ -158,9 +176,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/produtos'
     | '/cash'
+    | '/calculator'
     | '/clients'
     | '/dashboard'
     | '/orders'
+    | '/pdv'
     | '/production'
     | '/quotes'
     | '/receivables'
@@ -174,9 +194,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/produtos'
     | '/cash'
+    | '/calculator'
     | '/clients'
     | '/dashboard'
     | '/orders'
+    | '/pdv'
     | '/production'
     | '/quotes'
     | '/receivables'
@@ -191,9 +213,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/produtos'
     | '/_authenticated/cash'
+    | '/_authenticated/calculator'
     | '/_authenticated/clients'
     | '/_authenticated/dashboard'
     | '/_authenticated/orders'
+    | '/_authenticated/pdv'
     | '/_authenticated/production'
     | '/_authenticated/quotes'
     | '/_authenticated/receivables'
@@ -319,14 +343,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCashRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/calculator': {
+      id: '/_authenticated/calculator'
+      path: '/calculator'
+      fullPath: '/calculator'
+      preLoaderRoute: typeof AuthenticatedCalculatorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pdv': {
+      id: '/_authenticated/pdv'
+      path: '/pdv'
+      fullPath: '/pdv'
+      preLoaderRoute: typeof AuthenticatedPdvRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedCashRoute: typeof AuthenticatedCashRoute
+  AuthenticatedCalculatorRoute: typeof AuthenticatedCalculatorRoute
   AuthenticatedClientsRoute: typeof AuthenticatedClientsRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedOrdersRoute: typeof AuthenticatedOrdersRoute
+  AuthenticatedPdvRoute: typeof AuthenticatedPdvRoute
   AuthenticatedProductionRoute: typeof AuthenticatedProductionRoute
   AuthenticatedQuotesRoute: typeof AuthenticatedQuotesRoute
   AuthenticatedReceivablesRoute: typeof AuthenticatedReceivablesRoute
@@ -336,9 +376,11 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCashRoute: AuthenticatedCashRoute,
+  AuthenticatedCalculatorRoute: AuthenticatedCalculatorRoute,
   AuthenticatedClientsRoute: AuthenticatedClientsRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedOrdersRoute: AuthenticatedOrdersRoute,
+  AuthenticatedPdvRoute: AuthenticatedPdvRoute,
   AuthenticatedProductionRoute: AuthenticatedProductionRoute,
   AuthenticatedQuotesRoute: AuthenticatedQuotesRoute,
   AuthenticatedReceivablesRoute: AuthenticatedReceivablesRoute,

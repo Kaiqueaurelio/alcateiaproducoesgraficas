@@ -3,27 +3,30 @@ import { useMemo, useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   Bell,
+  BarChart3,
   ChevronRight,
   ClipboardList,
+  Cog,
   FileText,
   Kanban,
   LayoutDashboard,
   LogOut,
   Menu,
   Package,
+  PanelLeftClose,
+  PanelLeftOpen,
   Plus,
   Receipt,
   Search,
   Settings,
+  ShoppingCart,
+  Sparkles,
   Users,
-  Wallet,
   X,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useAuth, ROLE_LABEL, type AppRole } from "@/lib/auth";
 import { cn } from "@/lib/utils";
-import { EllaChat } from "@/components/EllaChat";
-import { Calculator, Sparkles } from "lucide-react";
 
 type NavItem = {
   to: string;
@@ -75,12 +78,12 @@ const NAV: NavItem[] = [
     roles: ["administrador", "atendente", "producao"],
   },
   {
-    to: "/cash",
-    label: "Caixa",
-    description: "Entradas e saídas",
-    icon: Wallet,
+    to: "/pdv",
+    label: "Caixa / PDV",
+    description: "Venda rápida e saldo do dia",
+    icon: ShoppingCart,
     section: "Financeiro",
-    roles: ["administrador", "financeiro"],
+    roles: ["administrador", "financeiro", "vendedor"],
   },
   {
     to: "/receivables",
@@ -99,18 +102,26 @@ const NAV: NavItem[] = [
     roles: ["administrador", "atendente"],
   },
   {
-    to: "/calculator",
-    label: "Calculadora PDV",
-    description: "Cálculo de serviços gráficos",
-    icon: Calculator,
-    section: "Operação",
-    roles: ["administrador", "atendente"],
-  },
-  {
     to: "/settings",
     label: "Configurações",
     description: "Empresa e preferências",
     icon: Settings,
+    section: "Administração",
+    roles: ["administrador"],
+  },
+  {
+    to: "/users",
+    label: "Usuários",
+    description: "Gerenciar cargos e acessos",
+    icon: Users,
+    section: "Administração",
+    roles: ["administrador"],
+  },
+  {
+    to: "/ella",
+    label: "Ella Ribeiro",
+    description: "Assistente de IA para gestão",
+    icon: Sparkles,
     section: "Administração",
     roles: ["administrador"],
   },
@@ -123,6 +134,11 @@ export function AppShell({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (state) => state.location.pathname });
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window === "undefined") return true;
+    const saved = localStorage.getItem("alcateia_sidebar_collapsed");
+    return saved ? saved === "1" : true;
+  });
   const [search, setSearch] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
 
@@ -144,31 +160,63 @@ export function AppShell({ children }: { children: ReactNode }) {
   const userInitial = user?.email?.charAt(0).toUpperCase() ?? "A";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen overflow-x-hidden bg-background">
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex w-72 flex-col overflow-hidden bg-sidebar text-sidebar-foreground shadow-2xl transition-transform md:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 flex flex-col overflow-hidden bg-sidebar text-sidebar-foreground shadow-2xl transition-[width,transform] duration-300 md:translate-x-0",
+          collapsed ? "w-72 md:w-20" : "w-72",
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="app-grid-pattern border-b border-white/10 px-5 py-5">
+        <div className="app-grid-pattern border-b border-white/10 px-4 py-4">
+          <button
+            type="button"
+            onClick={() =>
+              setCollapsed((value) => {
+                const next = !value;
+                localStorage.setItem("alcateia_sidebar_collapsed", next ? "1" : "0");
+                return next;
+              })
+            }
+            className="mb-3 hidden w-full items-center justify-center gap-2 rounded-xl bg-white/10 px-3 py-2 text-xs font-bold text-white/80 hover:bg-white/15 hover:text-white md:flex"
+            aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
+          >
+            {collapsed ? (
+              <>
+                <PanelLeftOpen className="h-4 w-4" />
+                <span className="sr-only">Expandir menu</span>
+              </>
+            ) : (
+              <>
+                <PanelLeftClose className="h-4 w-4" />
+                Recolher menu
+              </>
+            )}
+          </button>
           <div className="flex items-center justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-3">
-              <div className="grid h-13 w-13 shrink-0 place-items-center rounded-2xl bg-white p-1 shadow-lg ring-2 ring-brand-yellow/70">
-                <img
-                  src="/brand/alcateia-symbol.png"
-                  alt="Símbolo da Alcateia's"
-                  className="h-full w-full object-contain"
-                />
-              </div>
-              <div className="min-w-0">
-                <div className="truncate text-base font-extrabold tracking-tight text-white">
-                  Alcateia's
-                </div>
-                <div className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-yellow">
-                  Gestão gráfica
-                </div>
-              </div>
+            <div
+              className={cn(
+                "flex min-w-0 flex-1 items-center justify-center rounded-2xl bg-white p-2 shadow-lg ring-2 ring-brand-yellow/70",
+                collapsed ? "h-28 md:hidden" : "h-28",
+              )}
+            >
+              <img
+                src="/brand/alcateia-logo.png"
+                alt="Logo da Alcateia's Produções Gráficas"
+                className="h-full max-h-24 w-full object-contain"
+              />
+            </div>
+            <div
+              className={cn(
+                "hidden h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white p-1 shadow-lg ring-2 ring-brand-yellow/70",
+                collapsed && "md:grid",
+              )}
+            >
+              <img
+                src="/brand/alcateia-symbol.png"
+                alt="Símbolo da Alcateia's"
+                className="h-full w-full object-contain"
+              />
             </div>
             <button
               type="button"
@@ -179,7 +227,12 @@ export function AppShell({ children }: { children: ReactNode }) {
               <X className="h-5 w-5" />
             </button>
           </div>
-          <div className="mt-4 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5">
+          <div
+            className={cn(
+              "mt-4 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5",
+              collapsed && "md:hidden",
+            )}
+          >
             <p className="text-[10px] font-bold uppercase tracking-wider text-brand-yellow">
               Central de operações
             </p>
@@ -195,7 +248,12 @@ export function AppShell({ children }: { children: ReactNode }) {
             if (!sectionItems.length) return null;
             return (
               <div key={section} className="mb-5">
-                <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/35">
+                <p
+                  className={cn(
+                    "mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/35",
+                    collapsed && "md:hidden",
+                  )}
+                >
                   {section}
                 </p>
                 <div className="space-y-1">
@@ -223,8 +281,14 @@ export function AppShell({ children }: { children: ReactNode }) {
                         >
                           <Icon className="h-4 w-4" />
                         </span>
-                        <span className="min-w-0 flex-1 truncate">{item.label}</span>
-                        {active && <ChevronRight className="h-4 w-4 shrink-0" />}
+                        <span className={cn("min-w-0 flex-1 truncate", collapsed && "md:hidden")}>
+                          {item.label}
+                        </span>
+                        {active && (
+                          <ChevronRight
+                            className={cn("h-4 w-4 shrink-0", collapsed && "md:hidden")}
+                          />
+                        )}
                       </Link>
                     );
                   })}
@@ -235,11 +299,32 @@ export function AppShell({ children }: { children: ReactNode }) {
         </nav>
 
         <div className="border-t border-white/10 bg-black/10 p-3">
+          <button
+            type="button"
+            onClick={() =>
+              setCollapsed((value) => {
+                const next = !value;
+                localStorage.setItem("alcateia_sidebar_collapsed", next ? "1" : "0");
+                return next;
+              })
+            }
+            className="mb-2 hidden w-full items-center justify-center gap-2 rounded-xl bg-white/8 px-3 py-2 text-sm font-bold text-white/75 hover:bg-white/12 hover:text-white md:flex"
+            aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
+          >
+            {collapsed ? (
+              <PanelLeftOpen className="h-5 w-5" />
+            ) : (
+              <>
+                <PanelLeftClose className="h-5 w-5" />
+                <span>Recolher menu</span>
+              </>
+            )}
+          </button>
           <div className="mb-2 flex items-center gap-3 rounded-xl px-2 py-2">
             <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-yellow text-sm font-extrabold text-brand-blue">
               {userInitial}
             </div>
-            <div className="min-w-0 flex-1">
+            <div className={cn("min-w-0 flex-1", collapsed && "md:hidden")}>
               <div className="truncate text-xs font-semibold text-white">{user?.email}</div>
               <div className="truncate text-[11px] text-white/50">
                 {roles.map((role) => ROLE_LABEL[role]).join(", ") || "Sem papel"}
@@ -254,7 +339,8 @@ export function AppShell({ children }: { children: ReactNode }) {
             }}
             className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-white/65 transition-colors hover:bg-white/8 hover:text-white"
           >
-            <LogOut className="h-4 w-4" /> Sair da conta
+            <LogOut className="h-4 w-4" />{" "}
+            <span className={cn(collapsed && "md:hidden")}>Sair da conta</span>
           </button>
         </div>
       </aside>
@@ -268,14 +354,28 @@ export function AppShell({ children }: { children: ReactNode }) {
         />
       )}
 
-      <div className="flex min-h-screen min-w-0 flex-col md:ml-72">
+      <div
+        className={cn(
+          "flex min-h-screen min-w-0 max-w-full flex-col overflow-x-hidden transition-[margin] duration-300",
+          collapsed ? "md:ml-20" : "md:ml-72",
+        )}
+      >
         <div className="hidden h-8 items-center justify-between bg-brand-blue px-6 text-[11px] font-medium text-white/70 lg:flex">
           <span>Produção gráfica organizada do briefing à entrega</span>
           <span className="font-semibold text-brand-yellow">Alcateia's Produções Gráficas</span>
         </div>
 
-        <header className="sticky top-0 z-20 border-b border-border/80 bg-white/92 px-4 backdrop-blur-xl md:px-6 lg:top-0">
+        <header className="sticky top-0 z-20 border-b border-border/80 bg-white/92 px-3 backdrop-blur-xl md:px-4 lg:top-0">
           <div className="flex h-[72px] items-center gap-3">
+            {isAdmin && (
+              <Link
+                to="/ella"
+                className="hidden h-11 shrink-0 items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3 text-sm font-extrabold text-brand-blue hover:bg-blue-100 xl:inline-flex"
+              >
+                <Sparkles className="h-4 w-4" /> Perguntar à Ella
+              </Link>
+            )}
+
             <button
               type="button"
               className="rounded-xl border border-border bg-white p-2.5 text-brand-blue shadow-sm md:hidden"
@@ -285,7 +385,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Menu className="h-5 w-5" />
             </button>
 
-            <div className="min-w-0 shrink-0 sm:min-w-44">
+            <div className="min-w-0 flex-1 lg:flex-none lg:min-w-44">
               <p className="hidden text-[10px] font-bold uppercase tracking-[0.18em] text-brand-orange sm:block">
                 Central de gestão
               </p>
@@ -359,9 +459,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </header>
 
-        <main className="app-page flex-1">{children}</main>
+        <main className="app-page min-w-0 flex-1 overflow-x-hidden">{children}</main>
       </div>
-      <EllaChat />
     </div>
   );
 }
